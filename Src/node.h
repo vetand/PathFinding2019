@@ -11,5 +11,23 @@ struct Node
     double  F, g, H; //f-, g- and h-values of the search node
     Node    *parent; //backpointer to the predecessor node (e.g. the node which g-value was used to set the g-velue of the current node)
 
+    Node(int i, int j) : i(i), j(j), parent(nullptr) {}
+
+    bool operator < (const Node& other) const {
+        if (this->i == other.i) {
+            return (this->j < other.j);
+        } else {
+            return (this->i < other.i);
+        }
+    }
+
+    bool operator == (const Node& other) const {
+        return !(*this < other) && !(other < *this);
+    }
+
+    bool operator != (const Node& other) const {
+        return !(*this == other);
+    }
+
 };
 #endif

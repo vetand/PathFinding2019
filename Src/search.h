@@ -1,5 +1,6 @@
 #ifndef SEARCH_H
 #define SEARCH_H
+#include "config.h"
 #include "ilogger.h"
 #include "searchresult.h"
 #include "environmentoptions.h"
@@ -8,13 +9,20 @@
 #include <math.h>
 #include <limits>
 #include <chrono>
+#include <set>
+#include <type_traits>
+
+double heuristic(int node_i, int node_j, int goal_i, int goal_j,
+                            const EnvironmentOptions &options, 
+                            const Config &config);
 
 class Search
 {
     public:
         Search();
         ~Search(void);
-        SearchResult startSearch(ILogger *Logger, const Map &Map, const EnvironmentOptions &options);
+        SearchResult startSearch(ILogger *Logger, const Map &Map, const EnvironmentOptions &options, 
+                                                                  const Config &config);
 
     protected:
         //CODE HERE
@@ -32,10 +40,28 @@ class Search
         //Start with very simple (and ineffective) structures like list or vector and make it work first
         //and only then begin enhancement!
 
+        struct Comparator {
+            std::string breaking_ties;
+            bool operator () (const Node& node1, const Node& node2) const;
+        };
 
+        Comparator comp_nodes;
         SearchResult                    sresult; //This will store the search result
         std::list<Node>                 lppath, hppath; //
+        std::pair<int, int> finish_pos;
+        std::pair<int, int> start_pos;
 
         //CODE HERE to define other members of the class
+
+        bool comparator(const Node& node1, const Node& node2) const;
+
+        std::vector<Node> find_successors(const Node& curNode, 
+                                          const Map &map, const EnvironmentOptions &options,
+                                          const Config &config);
+
+        void makePrimaryPath(Node curNode, Node finishNode);
+
+        void makeSecondaryPath();
+
 };
 #endif

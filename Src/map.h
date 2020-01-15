@@ -21,12 +21,13 @@ class Map
 {
     private:
         int     height, width;
-        int     start_i, start_j;
-        int     goal_i, goal_j;
         double  cellSize;
         int**   Grid;
 
     public:
+        int     start_i, start_j;
+        int     goal_i, goal_j;
+
         Map();
         Map(const Map& orig);
         ~Map();
