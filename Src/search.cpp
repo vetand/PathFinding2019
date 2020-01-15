@@ -111,7 +111,6 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
     Node finish_node(0, 0);
 
     while (OPEN.size() > 0) {
-        ++sresult.numberofsteps;
         Node curNode = *OPEN.begin();
         OPEN.erase(OPEN.begin());
         if (CLOSED.find(curNode) != CLOSED.end()) {
@@ -128,10 +127,18 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
             if (CLOSED.find(node) == CLOSED.end()) {
                 node.parent = (Node*)&(*CLOSED.find(curNode));
                 OPEN.insert(node);
-                ++sresult.nodescreated;
             }
         }
+        ++sresult.numberofsteps;
     }
+
+    for (auto& node : OPEN) {
+        if (CLOSED.find(node) == CLOSED.end()) {
+            CLOSED.insert(node);
+        }
+    }
+
+    sresult.nodescreated = CLOSED.size();
 
     if (sresult.pathfound) {
         this->makePrimaryPath(finish_node, startNode);
