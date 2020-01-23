@@ -1,2 +1,2 @@
 # PathFinding2019
-15.01.2020 - КТ 1 работает
+[![Build Status](https://travis-ci.com/vetand/PathFinding2019.svg?branch=master)](https://travis-ci.org/vetand/PathFinding2019)
