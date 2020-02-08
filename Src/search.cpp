@@ -180,7 +180,7 @@ void Search::makeSecondaryPath() {
             break;
         }
         std::pair<int, int> new_direction = {next_it->i - it->i, next_it->j - it->j};
-        if (current_direction != current_direction) {
+        if (current_direction != new_direction) {
             this->hppath.insert(this->hppath.end(), *it);
         }
         current_direction = new_direction;
