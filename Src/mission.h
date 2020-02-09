@@ -38,7 +38,7 @@ class Mission
         Config                  config;
         EnvironmentOptions      options;
         Search                  search;
-        ILogger*                logger;
+        XmlLogger*              logger;
         const char*             fileName;
         SearchResult            sr;
 };

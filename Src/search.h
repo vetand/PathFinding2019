@@ -1,7 +1,7 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 #include "config.h"
-#include "ilogger.h"
+#include "xmllogger.h"
 #include "searchresult.h"
 #include "environmentoptions.h"
 #include <list>
@@ -21,8 +21,8 @@ class Search
     public:
         Search();
         ~Search(void);
-        SearchResult startSearch(ILogger *Logger, const Map &Map, const EnvironmentOptions &options, 
-                                                                  const Config &config);
+        SearchResult startSearch(XmlLogger *Logger, const Map &Map, const EnvironmentOptions &options, 
+                                                                    const Config &config);
 
     protected:
         //CODE HERE
@@ -52,6 +52,9 @@ class Search
         std::pair<int, int> start_pos;
 
         //CODE HERE to define other members of the class
+
+        std::list<Node> get_open_list(const std::set<Node, Comparator> OPEN);
+        std::list<Node> get_closed_list(const std::list<Node> CLOSED);
 
         bool comparator(const Node& node1, const Node& node2) const;
 

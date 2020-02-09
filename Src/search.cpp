@@ -81,7 +81,19 @@ std::vector<Node> Search::find_successors(const Node& curNode,
     return answer;
 }
 
-SearchResult Search::startSearch(ILogger *Logger, const Map &map, 
+std::list<Node> Search::get_open_list(const std::set<Node, Comparator> OPEN) {
+    std::list<Node> answer;
+    std::set<std::pair<int, int>> cells;
+    for (const Node& elem: OPEN) {
+        if (cells.find({elem.i, elem.j}) == cells.end()) {
+            answer.insert(answer.end(), elem);
+            cells.insert({elem.i, elem.j});
+        }
+    }
+    return answer;
+}
+
+SearchResult Search::startSearch(XmlLogger *Logger, const Map &map, 
                                  const EnvironmentOptions &options, const Config &config) {
     //need to implement
     auto time_start = clock();
@@ -107,6 +119,7 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
     startNode.F = startNode.H * config.SearchParams[CN_SP_HW];
     std::set<Node, Comparator> OPEN;
     std::set<Node> CLOSED;
+    std::list<Node> closed_copy;
     OPEN.insert(startNode);
     Node finish_node(0, 0);
 
@@ -117,6 +130,7 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
             continue;
         }
         CLOSED.insert(curNode);
+        closed_copy.insert(closed_copy.begin(), curNode);
         if (curNode.i == this->finish_pos.first && curNode.j == this->finish_pos.second) {
             finish_node = curNode;
             sresult.pathfound = true;
@@ -129,6 +143,11 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
                 OPEN.insert(node);
             }
         }
+        if (Logger->get_loglevel() == CN_LP_LEVEL_FULL_WORD) {
+            Logger->writeToLogOpenClose(this->get_open_list(OPEN), 
+                                        closed_copy, 
+                                        sresult.numberofsteps);
+        }
         ++sresult.numberofsteps;
     }
 
@@ -139,6 +158,15 @@ SearchResult Search::startSearch(ILogger *Logger, const Map &map,
     }
 
     sresult.nodescreated = CLOSED.size();
+    if (Logger->get_loglevel() == CN_LP_LEVEL_MEDIUM_WORD) {
+        Logger->writeToLogOpenClose(this->get_open_list(OPEN), 
+                                    closed_copy, 
+                                    0);
+    } else if (Logger->get_loglevel() == CN_LP_LEVEL_FULL_WORD) {
+        Logger->writeToLogOpenClose(this->get_open_list(OPEN), 
+                                    closed_copy, 
+                                    sresult.numberofsteps);
+    }
 
     if (sresult.pathfound) {
         this->makePrimaryPath(finish_node, startNode);

@@ -20,7 +20,9 @@ public:
 
     void writeToLogMap(const Map &Map, const std::list<Node> &path);
 
-    //void writeToLogOpenClose(const typename &open, const typename &close);
+    void writeToLogOpenClose(const std::list<Node>& open, 
+                             const std::list<Node>& closed,
+                             int step_number);
 
     void writeToLogPath(const std::list<Node> &path);
 
@@ -29,6 +31,8 @@ public:
     void writeToLogNotFound();
 
     void writeToLogSummary(unsigned int numberofsteps, unsigned int nodescreated, float length, double time, double cellSize);
+
+    std::string get_loglevel() const;
 
 private:
     std::string LogFileName;
